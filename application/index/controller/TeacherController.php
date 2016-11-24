@@ -49,9 +49,19 @@ class TeacherController extends Controller
 		//$Teacher = new Teacher();
 		//$state = $Teacher->data($teacher)->save();
 		
-		$Teacher->save();
+		//$Teacher->save();
+		$result = $Teacher->validate(true)->save($Teacher->getData());		
+		if(false===$result)
+		{
+			return '新增失败:' . $Teacher->getError();
+		}
+		else 
+		{
+			return '新增成功，新ID为：'.$Teacher->id;
+		}
 		
-		return $Teacher->name .' 增加至数据表'.'ID:'. $Teacher->id;		
+	
+		//return $Teacher->name .' 增加至数据表'.'ID:'. $Teacher->id;		
 	}
 	
 	public function add()
@@ -59,4 +69,15 @@ class TeacherController extends Controller
 		$html=$this->fetch();
 		return $html;
 	}
+	
+	public function test()
+	{
+		$data = array();
+		$data['username']='a';
+		$data['name']='test';
+		$data['sex']='1';
+		$data['email']='test@ey.com';
+		var_dump($this->validate($data, 'Teacher'));
+	}
+	
 }
