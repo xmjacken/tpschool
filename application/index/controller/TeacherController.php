@@ -17,11 +17,18 @@ class TeacherController extends Controller
 	
 	public  function index()
 	{
+		try {
 		$Teacher = new Teacher();
 		$teachers = $Teacher->select();
+		// 向V层传数据
 		$this->assign('teachers',$teachers);
+		// 取回打包后的数据
 		$htmls = $this->fetch();
+		// 将数据返回给用户
 		return $htmls;
+		}catch (\Exception $e){
+			return '系统错误：'.$e->getMessage();
+		}
 		
 			
 		//echo  'hi eyoung';
@@ -57,7 +64,7 @@ class TeacherController extends Controller
 		}
 		else 
 		{
-			return '新增成功，新ID为：'.$Teacher->id;
+			return $this->success('新增'.$Teacher->name.'教师成功',url('index'));
 		}
 		
 	
@@ -66,8 +73,102 @@ class TeacherController extends Controller
 	
 	public function add()
 	{
+		try {
 		$html=$this->fetch();
 		return $html;
+		}catch (\Exception $e){
+			return '系统错误：'.$e->getMessage();
+		}
+	}
+	
+	public function edit()
+	{
+		// 获取传入ID
+		$id=Request::instance()->param('id/d');
+		
+		// 在Teacher表模型中获取当前记录
+		$Teacher=Teacher::get($id);
+		if(is_null($Teacher)){
+			return $this->error('未找到ID为'.$id.'的教师');
+		}
+		
+		// 将数据传给V层
+		$this->assign('Teacher',$Teacher);
+		
+		// 获取封装好的V层内容
+		$thmls=$this->fetch();
+		
+		// 将封装好的V层内容返回给用户
+		return $thmls;
+	}
+	
+	public function update()
+	{
+		/* $teacher=Request::instance()->post();
+		
+		$Teacher=new Teacher();
+		$message='更新成功';
+		try{
+			if(false===$Teacher->validate(true)->isUpdate()->save($teacher)){
+				$message='更新失败:'.$Teacher->getError();
+			}
+		}catch (\Exception $e){
+			$message='更新失败:'.$e->getMessage();
+		}
+		return $message; */
+		
+		try{
+		// 接收数据，获取要更新的关键字信息
+		$id = Request::instance()->post('id/d');
+		$message = '更新成功';
+		// 获取当前对象
+		$teacher = Teacher::get($id);
+		if(!is_null($teacher)){
+			// 写入要更新的数据
+			$teacher->name = Request::instance()->post('name');
+			$teacher->username = Request::instance()->post('username');
+			$teacher->sex = Request::instance()->post('sex');
+			$teacher->email = Request::instance()->post('email');
+			// 更新
+			if(false === $teacher->validate(true)->save()){
+				$message = '更新失败:'.$teacher->getError();
+			}
+		}else {
+			throw new \Exception('所更新记录不存在',1);
+		}
+		}catch (\Exception $e){
+			$message = $e->getMessage();
+		}
+		return $message;
+	}
+	
+	public function delete()
+	{
+		//获取pathinfo传入的ID值
+		$id=Request::instance()->param('id/d');
+		if(is_null($id)||0===$id){
+			return $this->error('未获取ID信息');
+		}
+		//获取要删除的对像
+		$Teacher=Teacher::get($id);
+		//判断对像是否存在
+		if(!is_null($Teacher)){
+			if($Teacher->delete()){				
+				return $this->success('删除成功',url('index'));
+			}
+			else {
+				return $this->error('删除失败:'.$Teacher->getError());
+			}
+		}
+		else {
+			return $this->error('未获取到ID为'.$id.'的教师');
+		}
+		/* if($count=Teacher::destroy(4)){
+			return '共删除'.$count.'条数据';
+		}
+		else {
+			return '删除失败';
+		} */
 	}
 	
 	public function test()
