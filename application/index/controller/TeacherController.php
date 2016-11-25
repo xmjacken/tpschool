@@ -4,7 +4,7 @@ use think\Controller;
 use think\Request;
 use app\common\model\Teacher;
 
-class TeacherController extends Controller
+class TeacherController extends IndexController
 {
 	public function index2()
 	{
@@ -17,31 +17,30 @@ class TeacherController extends Controller
 	
 	public  function index()
 	{
-		try {
+		
+		$name = Request::instance()->get('name');
+		$pageSize = 2 ;
 		$Teacher = new Teacher();
-		$teachers = $Teacher->select();
+		if(!empty($name))
+		{
+			$Teacher->where('name','like','%'.$name.'%');
+		}
+		
+		//$teachers = $Teacher->select();
+		$teachers = $Teacher->paginate($pageSize,false,['query'=>['name'=>$name]]);
 		// 向V层传数据
 		$this->assign('teachers',$teachers);
 		// 取回打包后的数据
 		$htmls = $this->fetch();
 		// 将数据返回给用户
-		return $htmls;
-		}catch (\Exception $e){
-			return '系统错误：'.$e->getMessage();
-		}
+		return $htmls;		
 		
-			
-		//echo  'hi eyoung';
-// 		$JiaoShiBiao = new Teacher();
-// 		$SuoYouJiaoShi = $JiaoShiBiao->select();
-// 		$JiaoShiZhangSan = $SuoYouJiaoShi[0];
-// 		//var_dump($JiaoShiZhangSan->getData('name'));
-// 		echo '教师姓名：'. $JiaoShiZhangSan->getData('name') .'<br>';
-// 		return '重复一遍，教师姓名：' . $JiaoShiZhangSan->getData('name');
+		
 	}
 	
 	public function insert()
 	{
+		//try {
 		//var_dump($_POST);
 		//$postData = Request::instance()->post();
 		$postData = $this->request->post();
@@ -66,6 +65,9 @@ class TeacherController extends Controller
 		{
 			return $this->success('新增'.$Teacher->name.'教师成功',url('index'));
 		}
+// 		}catch(\Exception $e){
+// 			return '系统错误：'.$e->getMessage();			
+// 		}
 		
 	
 		//return $Teacher->name .' 增加至数据表'.'ID:'. $Teacher->id;		
@@ -83,6 +85,7 @@ class TeacherController extends Controller
 	
 	public function edit()
 	{
+		try{
 		// 获取传入ID
 		$id=Request::instance()->param('id/d');
 		
@@ -100,6 +103,12 @@ class TeacherController extends Controller
 		
 		// 将封装好的V层内容返回给用户
 		return $thmls;
+		}catch (\think\exception\HttpResponseException $e){
+			throw $e;			
+		}
+		catch (\Exception $e){
+			return $e->getMessage();
+		}
 	}
 	
 	public function update()
@@ -133,6 +142,10 @@ class TeacherController extends Controller
 			if(false === $teacher->validate(true)->save()){
 				$message = '更新失败:'.$teacher->getError();
 			}
+			else {
+				$message = $message . "<script type='text/javascript'>setTimeout(window.location.href='/index/teacher',10)
+    </script>" ;
+		}
 		}else {
 			throw new \Exception('所更新记录不存在',1);
 		}
@@ -144,6 +157,7 @@ class TeacherController extends Controller
 	
 	public function delete()
 	{
+		
 		//获取pathinfo传入的ID值
 		$id=Request::instance()->param('id/d');
 		if(is_null($id)||0===$id){
@@ -163,12 +177,15 @@ class TeacherController extends Controller
 		else {
 			return $this->error('未获取到ID为'.$id.'的教师');
 		}
-		/* if($count=Teacher::destroy(4)){
-			return '共删除'.$count.'条数据';
+		
+	}
+	
+	public function logOut(){
+		if(Teacher::logOut()){
+			return $this->success('logout success',url('/index'));			
+		}else{
+			return $this->error('logout fail',url('/index'));
 		}
-		else {
-			return '删除失败';
-		} */
 	}
 	
 	public function test()
