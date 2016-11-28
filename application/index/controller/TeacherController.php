@@ -188,6 +188,21 @@ class TeacherController extends IndexController
 		}
 	}
 	
+	//导出用户
+	public function excel_action()
+	{
+		$xlsName  = "Teacher";
+		$xlsCell  = array(
+				array('id','ID号'),
+				array('username','登录账户'),
+				array('sex','性别'),
+				array('create_time','注册时间')
+		);
+		//$xlsData=Teacher::all();
+		$xlsData  =db("teacher")->where("sex",1)->select();
+		exportExcel($xlsName,$xlsCell,$xlsData);
+	}
+	
 	public function test()
 	{
 		$data = array();
