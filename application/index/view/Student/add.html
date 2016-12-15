@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>add student</title>
+</head>
+<body>
+<form action="{:url('save')}" method="post">
+        <label for="name">姓名:</label><input type="text" name="name" id="name" />
+        <label for="num">学号:</label><input type="text" name="num" id="num" />
+        <label for="sex">性别:</label>
+        <select name="sex" id="sex">           
+          <option value="0">男</option>
+          <option value="1">女</option>            
+		</select>
+        <label for="klass_id">班级:</label>
+        <select name="klass_id" id="klass">
+           {volist name="klasses" id="klass"}
+            <option value="{$klass->getData('id')}">{$klass->getData('name')}</option>
+           {/volist}
+		</select>
+		<label for="email">邮箱:</label><input type="text" name="email" id="email" />
+        <button type="submit">保存</button>
+    </form>
+</body>
+</html>

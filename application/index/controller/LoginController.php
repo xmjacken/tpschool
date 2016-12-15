@@ -16,7 +16,7 @@ class LoginController extends Controller
 		$postData = Request::instance()->post();		
 		// 验证用户名是否存在
 		if(Teacher::login($postData['username'], $postData['password'])){			
-			$this->success('login success',url('/index/klass'));
+			$this->success('login success',url('/index/student'));
 		}else {
 			$Teacher = new Teacher();
 			echo $Teacher->encriptPassword($postData['password']);

@@ -16,7 +16,8 @@ class IndexController extends Controller
 	
     public function index()
     {
-       //return  redirect('/index/teacher');
-       return '<p align=center>index系统首页</p>';
+       //return  redirect('/index/student');
+       //return '<p align=center>系统首页</p>';
+      
     }
 }

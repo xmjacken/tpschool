@@ -18,6 +18,6 @@ class Klass extends Model
 	
 	public function Teacher()
 	{
-		return $this->belongsTo('teacher');
+		return $this->belongsTo('Teacher');
 	}
 }
