@@ -9,7 +9,7 @@ class IndexController extends Controller
 		// 调用父类构造函数(必须)
 		parent::__construct();
 		if(!Teacher::isLogin()){
-			return $this->error('login fail',url('/index/login'));
+			return $this->error('login fail',url('Login/login'));
 		}
 		
 	}

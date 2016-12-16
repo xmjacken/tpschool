@@ -48,9 +48,10 @@ class TeacherController extends IndexController
 		//return;
 		$Teacher = new Teacher();
 		$Teacher->name=$postData['name'];
-		$Teacher->username=$postData['username'];
+		$Teacher->username=$postData['username'];		
 		$Teacher->sex=$postData['sex'];
 		$Teacher->email=$postData['email'];	
+		$Teacher->password= $Teacher->encriptPassword($postData['password']);
 		
 		//$Teacher = new Teacher();
 		//$state = $Teacher->data($teacher)->save();
@@ -138,6 +139,11 @@ class TeacherController extends IndexController
 			$teacher->username = Request::instance()->post('username');
 			$teacher->sex = Request::instance()->post('sex');
 			$teacher->email = Request::instance()->post('email');
+			if(!empty(Request::instance()->post('password')))
+			{
+				$teacher->password = $teacher->encriptPassword(Request::instance()->post('password'));
+			}
+			
 			// 更新
 			if(false === $teacher->validate(true)->save()){
 				$message = '更新失败:'.$teacher->getError();
@@ -182,9 +188,9 @@ class TeacherController extends IndexController
 	
 	public function logOut(){
 		if(Teacher::logOut()){
-			return $this->success('logout success',url('/index'));			
+			return $this->success('logout success',url('/index/login'));			
 		}else{
-			return $this->error('logout fail',url('/index'));
+			return $this->error('logout fail',url('/index/login'));
 		}
 	}
 	

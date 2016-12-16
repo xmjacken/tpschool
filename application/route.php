@@ -16,8 +16,7 @@ return [
     '[hello]'     => [
         ':id'   => ['index/hello', ['method' => 'get'], ['id' => '\d+']],
         ':name' => ['index/hello', ['method' => 'post']],
-    ],
+    ],		
 		// 首页 定位到 Login控制器下的index触发器, 方法为get
 		''         => ['Login/index', ['method' => 'get']],
-
 ];
