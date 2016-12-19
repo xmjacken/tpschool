@@ -33,30 +33,44 @@ class TeacherController extends IndexController
 		// 取回打包后的数据
 		$htmls = $this->fetch();
 		// 将数据返回给用户
-		return $htmls;		
-		
-		
+		return $htmls;
 	}
 	
-	public function insert()
+	private function saveTeacher(Teacher &$Teacher,$isUpdate=false)
 	{
-		//try {
-		//var_dump($_POST);
-		//$postData = Request::instance()->post();
+		$Teacher->name = input('post.name');
+		$Teacher->sex = input('post.sex/d');
+		if(!$isUpdate)
+		{
+			$Teacher->username = input('post.username');
+		}
+		$Teacher->email = input('post.email');
+		if(!empty(Request::instance()->post('password')))
+		{
+			$Teacher->password = $Teacher->encriptPassword(input('post.password')) ;
+		}
+		
+		return $Teacher->validate(true)->save($Teacher->getData());
+	}
+	
+	public function save()
+	{	
+		$Teacher = new Teacher();
+		if(!$this->saveTeacher($Teacher))
+		{
+			return $this->error('操作失败'.$Teacher->getError());
+		}
+		return $this->success('操作成功',url('/index/teacher'));
+		/*
 		$postData = $this->request->post();
-		//var_dump($postData);
-		//return;
+		
 		$Teacher = new Teacher();
 		$Teacher->name=$postData['name'];
 		$Teacher->username=$postData['username'];		
 		$Teacher->sex=$postData['sex'];
 		$Teacher->email=$postData['email'];	
-		$Teacher->password= $Teacher->encriptPassword($postData['password']);
+		$Teacher->password= $Teacher->encriptPassword($postData['password']);		
 		
-		//$Teacher = new Teacher();
-		//$state = $Teacher->data($teacher)->save();
-		
-		//$Teacher->save();
 		$result = $Teacher->validate(true)->save($Teacher->getData());		
 		if(false===$result)
 		{
@@ -66,18 +80,73 @@ class TeacherController extends IndexController
 		{
 			return $this->success('新增'.$Teacher->name.'教师成功',url('index'));
 		}
-// 		}catch(\Exception $e){
-// 			return '系统错误：'.$e->getMessage();			
-// 		}
-		
+		*/
+	}
 	
-		//return $Teacher->name .' 增加至数据表'.'ID:'. $Teacher->id;		
+	public function update()
+	{
+		$id = Request::instance()->post('id/d');
+		$Teacher = Teacher::get($id);
+	
+		if(!is_null($Teacher))
+		{
+			if(!$this->saveTeacher($Teacher,true))
+			{
+				return $this->error('操作失败'.$Teacher->getError());
+			}
+		}else {
+			return $this->error('操作记录不存在：'.$Teacher->getError());
+		}
+		return $this->success('操作成功',url('/index/teacher'));
+	
+		/*
+			try{
+			// 接收数据，获取要更新的关键字信息
+			$id = Request::instance()->post('id/d');
+			$message = '更新成功';
+			// 获取当前对象
+			$teacher = Teacher::get($id);
+			if(!is_null($teacher)){
+			// 写入要更新的数据
+			$teacher->name = Request::instance()->post('name');
+			$teacher->username = Request::instance()->post('username');
+			$teacher->sex = Request::instance()->post('sex');
+			$teacher->email = Request::instance()->post('email');
+			if(!empty(Request::instance()->post('password')))
+			{
+			$teacher->password = $teacher->encriptPassword(Request::instance()->post('password'));
+			}
+				
+			// 更新
+			if(false === $teacher->validate(true)->save()){
+			$message = '更新失败:'.$teacher->getError();
+			}
+			else {
+			$message = $message . "<script type='text/javascript'>setTimeout(window.location.href='/index/teacher',10)
+			</script>" ;
+			}
+			}else {
+			throw new \Exception('所更新记录不存在',1);
+			}
+			}catch (\Exception $e){
+			$message = $e->getMessage();
+			}
+			return $message;
+			*/
 	}
 	
 	public function add()
 	{
+		$Teacher = new Teacher();
+		$Teacher->id = 0;
+		$Teacher->name = '';
+		$Teacher->username = '';
+		$Teacher->password = '';
+		$Teacher->sex = '0';
+		$Teacher->email = '';
+		$this->assign('Teacher',$Teacher);
 		try {
-		$html=$this->fetch();
+		$html=$this->fetch('edit');
 		return $html;
 		}catch (\Exception $e){
 			return '系统错误：'.$e->getMessage();
@@ -112,54 +181,7 @@ class TeacherController extends IndexController
 		}
 	}
 	
-	public function update()
-	{
-		/* $teacher=Request::instance()->post();
-		
-		$Teacher=new Teacher();
-		$message='更新成功';
-		try{
-			if(false===$Teacher->validate(true)->isUpdate()->save($teacher)){
-				$message='更新失败:'.$Teacher->getError();
-			}
-		}catch (\Exception $e){
-			$message='更新失败:'.$e->getMessage();
-		}
-		return $message; */
-		
-		try{
-		// 接收数据，获取要更新的关键字信息
-		$id = Request::instance()->post('id/d');
-		$message = '更新成功';
-		// 获取当前对象
-		$teacher = Teacher::get($id);
-		if(!is_null($teacher)){
-			// 写入要更新的数据
-			$teacher->name = Request::instance()->post('name');
-			$teacher->username = Request::instance()->post('username');
-			$teacher->sex = Request::instance()->post('sex');
-			$teacher->email = Request::instance()->post('email');
-			if(!empty(Request::instance()->post('password')))
-			{
-				$teacher->password = $teacher->encriptPassword(Request::instance()->post('password'));
-			}
-			
-			// 更新
-			if(false === $teacher->validate(true)->save()){
-				$message = '更新失败:'.$teacher->getError();
-			}
-			else {
-				$message = $message . "<script type='text/javascript'>setTimeout(window.location.href='/index/teacher',10)
-    </script>" ;
-		}
-		}else {
-			throw new \Exception('所更新记录不存在',1);
-		}
-		}catch (\Exception $e){
-			$message = $e->getMessage();
-		}
-		return $message;
-	}
+	
 	
 	public function delete()
 	{

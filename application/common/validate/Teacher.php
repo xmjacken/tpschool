@@ -8,7 +8,6 @@ class Teacher extends Validate
 			'username'=>'require|unique:teacher|length:4,25',
 			'name'=>'require|length:2,25',
 			'sex'=>'in:0,1',
-			'email'=>'email',
-			'password'=>'require|length:3,25',
+			'email'=>'email',			
 	];
 }

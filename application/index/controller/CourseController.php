@@ -10,7 +10,7 @@ class CourseController extends IndexController
 	public function index()
 	{
 		$name = Request::instance()->get('name');
-		$pagesize = 1;
+		$pagesize = 2;
 		$Course = new Course();
 		if(!empty($name))
 		{
@@ -71,5 +71,53 @@ class CourseController extends IndexController
 		// -------------------------- 新增班级课程信息(end) --------------------------
 		unset($Course);
 		return $this->success('操作成功',(url('/index/course')));
+	}
+	
+	public function edit()
+	{
+		$id = Request::instance()->param('id/d');
+		$Course = Course::get($id);
+		if (is_null($Course))
+		{
+			return $this->error('id为:'.$id.'的课程不存在。');
+		}
+		$this->assign('Course',$Course);
+		return $this->fetch();		
+	}
+	
+	public function update()
+	{
+		//var_dump(Request::instance()->post());
+		// 获取当前课程
+		$id = Request::instance()->post('id/d');
+		$Course = Course::get($id);
+		if(is_null($Course))
+		{
+			return $this->error('不存在ID为：'.$id.'的课程');
+		}
+		//更新课程名称
+		$Course->name = Request::instance()->post('name');
+		if(is_null($Course->validate(true)->save($Course->getData())))
+		{
+			return $this->error('课程名更新错误：'.$Course->getError());
+		}
+		
+		//删除原有信息
+		
+		$map=['course_id'=>$id];
+		if(false===$Course->KlassCourses()->where($map)->delete())
+		{
+			return $this->error('删除关联课程班级信息错误：'.$Course->getError());
+		}
+		// 增加新增数据，执行添加操作。
+		$klassIds = Request::instance()->post('klass_id/a');
+		if(!is_null($klassIds))
+		{
+			if(!$Course->Klasses()->saveAll($klassIds))
+			{
+				return $this->error('课程-班级信息保存错误：'.$Course->getError());
+			}
+		}
+		return $this->success('操作成功',url('/index/course'));
 	}
 }
