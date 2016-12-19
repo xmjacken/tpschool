@@ -6,8 +6,34 @@
     <title>{block name="title"}标题{/block}</title>
     <link rel="stylesheet" type="text/css" href="/static/bootstrap-3.3.5-dist/css/bootstrap.min.css">
 </head>
-
 <body class="container">
+	<!-- 菜单导航 -->
+    <div class="row">
+        <div class="col-md-12">
+            <nav class="navbar navbar-default" role="navigation">
+                <div class="container-fluid">
+                    <div class="navbar-header">
+                        <a class="navbar-brand" href="#">eySoft</a>
+                    </div>
+                    <!-- Collect the nav links, forms, and other content for toggling -->
+                    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                        <ul class="nav navbar-nav">
+                            <li class="active"><a href="{:url('Teacher/index')}">Teacher</a></li>
+                            <li><a href="{:url('Student/index')}">Student Manage</a></li>
+                            <li><a href="{:url('Klass/index')}">Class Manage</a></li>
+                            <li><a href="{:url('Course/index')}">Course Manage</a></li>
+                        </ul>
+                        <ul class="nav navbar-nav navbar-right">
+                            <li><a href="{:url('Login/logout')}">logout</a></li>
+                        </ul>
+                    </div>
+                    <!-- /.navbar-collapse -->
+                </div>
+                <!-- /.container-fluid -->
+            </nav>
+        </div>
+    </div>
+    <!-- /菜单导航 -->
     <div class="row">
         <div class="col-md-12">
             {block name="search"}

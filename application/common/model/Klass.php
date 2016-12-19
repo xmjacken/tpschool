@@ -4,7 +4,8 @@ use think\Model;
 
 class Klass extends Model
 {
-	private $Teacher;
+	//private $Teacher;
+	
 	public function  getTeacher()
 	{
 		if(is_null($this->Teacher))
@@ -14,8 +15,14 @@ class Klass extends Model
 		$this->Teacher = Teacher::get($teacherId);
 		}
 		return $this->Teacher;		
-	}	
+	}
 	
+	
+	/**
+	 * 获取对应的教师（辅导员）信息
+	 * @return Teacher 教师
+	 * @author 
+	 */
 	public function Teacher()
 	{
 		return $this->belongsTo('Teacher');
