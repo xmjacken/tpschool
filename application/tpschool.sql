@@ -52,7 +52,7 @@ CREATE TABLE `ey_klass` (
 -- ----------------------------
 -- Records of ey_klass
 -- ----------------------------
-INSERT INTO `ey_klass` VALUES ('1', '实验1班', '9', '0', '1466493790');
+INSERT INTO `ey_klass` VALUES ('1', '实验1班', '4', '0', '1466493790');
 INSERT INTO `ey_klass` VALUES ('2', '实验2班', '2', '0', '0');
 INSERT INTO `ey_klass` VALUES ('3', '实验3班', '1', '0', '0');
 INSERT INTO `ey_klass` VALUES ('4', '实验4班', '2', '0', '0');
