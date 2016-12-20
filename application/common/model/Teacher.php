@@ -43,6 +43,7 @@ class Teacher extends Model
 			if ($ldapbind) {
 				//echo "LDAP bind successful...\n";
 				session('teacherId',$ldaprdn);
+				ldap_unbind($ldapconn); //验证完成，断开连接
 				return true;
 			} else {
 				//echo "LDAP bind failed...\n";
