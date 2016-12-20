@@ -37,4 +37,5 @@ return [
 		'course/add'	=>	['Course/add',['method'	=>	'get']],
 		'course/save'	=>	['Course/save',['method'	=>	'post']],
 		'course/edit/:id'	=>	['Course/edit',['method'	=>	'get'],['id'	=>	'/d+']],
+		'ldap/'	=>	['Ldap/index',['method'	=>	'get']],
 ];
