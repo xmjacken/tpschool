@@ -17,9 +17,9 @@ class LoginController extends Controller
 		// 验证用户名是否存在
 		if(Teacher::login($postData['username'], $postData['password'])){			
 			$this->success('login success',url('/index/teacher'));
+		}elseif(Teacher::ldaplogin($postData['username'], $postData['password'])){
+			$this->success('login success',url('/index/klass'));
 		}else {
-			//$Teacher = new Teacher();
-			//echo $Teacher->encriptPassword($postData['password']);
 			// 用户名密码错误，跳转到登录界面
 			$this->error('login fail',url('/'));
 		}
