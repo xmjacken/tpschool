@@ -26,6 +26,9 @@ class TeacherController extends IndexController
 			$Teacher->where('name','like','%'.$name.'%');
 		}
 		
+		// 打印$Teacher 至控制台
+		trace($Teacher,'debug');
+		
 		//$teachers = $Teacher->select();
 		$teachers = $Teacher->paginate($pageSize,false,['query'=>['name'=>$name]]);
 		// 向V层传数据

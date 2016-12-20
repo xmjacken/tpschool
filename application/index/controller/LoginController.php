@@ -21,16 +21,16 @@ class LoginController extends Controller
 			//$Teacher = new Teacher();
 			//echo $Teacher->encriptPassword($postData['password']);
 			// 用户名密码错误，跳转到登录界面
-			$this->error('login fail',url('/index/login'));
+			$this->error('login fail',url('/'));
 		}
 		
 	}
 	
 	public function logOut(){
 		if(Teacher::logOut()){
-			return $this->success('logout success',url('/index/login'));
+			return $this->success('logout success',url('/'));
 		}else{
-			return $this->error('logout fail',url('/index/login'));
+			return $this->error('logout fail',url('Login/login'));
 		}
 	}
 }
