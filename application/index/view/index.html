@@ -5,6 +5,28 @@
     <meta charset="UTF-8">
     <title>{block name="title"}标题{/block}</title>
     <link rel="stylesheet" type="text/css" href="/static/bootstrap-3.3.5-dist/css/bootstrap.min.css">
+    <script src="/static/jquery/jquery-3.1.1.min.js"></script>
+    <script type="text/javascript">
+    $(document).ready(function(){
+    	//点击链接时，先移除li标签的active class,再添加active class到父级的li标准    	
+    	$(".navbar-nav li a").click(function(){
+    		$(".navbar-nav li").removeClass("active");
+    		$(this).parent().addClass("active");
+    	})
+    	//点击链接切换到新页面时，对li a标签href地址检查比对，与当前打开窗口地址相关则添加active class到li
+    	var loc = window.location.href;
+    	$('.navbar-nav li a').each(function () {
+    	 var status = loc.indexOf($(this).attr('href'));
+    	 $(this).closest('li').removeClass('active');
+    	 //console.log(status);
+
+    	 if ( -1 != status ) {
+    	  //console.log(status);
+    	  $(this).closest('li').addClass('active');
+    	 }
+    	}); 
+    })
+    </script>
 </head>
 <body class="container">
 	<!-- 菜单导航 -->
@@ -18,10 +40,10 @@
                     <!-- Collect the nav links, forms, and other content for toggling -->
                     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                         <ul class="nav navbar-nav">
-                            <li class="active"><a href="{:url('Teacher/index')}">Teacher</a></li>
-                            <li><a href="{:url('Student/index')}">Student Manage</a></li>
+                            <li class="active" id="teacher"><a href="{:url('Teacher/index')}">Teacher</a></li>
+                            <li><a href="{:url('Student/index')}">Student Manage</a></li>                            
                             <li><a href="{:url('Klass/index')}">Class Manage</a></li>
-                            <li><a href="{:url('Course/index')}">Course Manage</a></li>
+                            <li><a href="{:url('Course/index')}">Course Manage</a></li>                            
                         </ul>
                         <ul class="nav navbar-nav navbar-right">
                             <li><a href="{:url('Login/logout')}">logout</a></li>
